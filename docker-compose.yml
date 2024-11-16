@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  drink-back:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Xms256m -Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://drinks-db:5432/drinks_db
+      - SPRING_DATASOURCE_USERNAME=drinks_user
+      - SPRING_DATASOURCE_PASSWORD=drinks_password
+    networks:
+      - drinks-net
+    depends_on:
+      - drinks-db
+    restart: unless-stopped
+
+  drinks-db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=drinks_db
+      - POSTGRES_USER=drinks_user
+      - POSTGRES_PASSWORD=drinks_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - drinks_data:/var/lib/postgresql/data
+    networks:
+      - drinks-net
+    restart: unless-stopped
+
+networks:
+  drinks-net:
+    driver: bridge
+volumes:
+  drinks_data:
