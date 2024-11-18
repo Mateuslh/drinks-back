@@ -9,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -21,4 +22,8 @@ public interface DrinkRepository extends JpaRepository<Drink, Long>, PagingAndSo
     Page<Drink> findByAdminIdAndDrinkNameSimilar(@Param("adminId") Long adminId, @Param("drinkName") String drinkName, Pageable pageable);
 
     Optional<Drink> findByAdminIdAndId(Long adminId, Long id);
+
+    @Query("SELECT COUNT(d) FROM Drink d WHERE d.admin.id = :adminId AND d.createdAt >= :date")
+    Long countByAdminIdAndCreatedAtAfter(@Param("adminId") Long adminId, @Param("date") LocalDateTime date);
+
 }

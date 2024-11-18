@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -23,7 +25,6 @@ public class Drink {
     @JsonIgnore
     private Admin admin;
 
-
     @JsonProperty("briefDescription")
     private String briefDescription;
 
@@ -41,4 +42,9 @@ public class Drink {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String imageBase64;
+
+    @CreationTimestamp
+    @Column(updatable = false, nullable = false)
+    @JsonIgnore
+    private LocalDateTime createdAt;
 }

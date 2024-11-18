@@ -4,11 +4,15 @@ import com.dev.drinksback.dto.AdminResponseDTO;
 import com.dev.drinksback.exception.EntidadeNaoEncontradaException;
 import com.dev.drinksback.model.Admin;
 import com.dev.drinksback.repository.AdminRepository;
+import com.dev.drinksback.repository.DrinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @SuppressWarnings("ALL")
 @Service
@@ -19,6 +23,12 @@ public class AdminService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DrinkRepository drinkRepository;
+
+    @Value("${user.creditos.generation:5}")
+    private Long CREDITOS_GENERATION;
 
     public Page<Admin> findAll(Pageable pageable) {
         return adminRepository.findAll(pageable);
@@ -44,6 +54,11 @@ public class AdminService {
 
     public void delete(Admin admin) {
         adminRepository.delete(admin);
+    }
+
+    public Long getCreditos(Long adminId) {
+        LocalDateTime lastDay = LocalDateTime.now().minusDays(1);
+        return CREDITOS_GENERATION - drinkRepository.countByAdminIdAndCreatedAtAfter(adminId, lastDay);
     }
 
     public AdminResponseDTO toAdminResponseDTO(Admin admin) {
