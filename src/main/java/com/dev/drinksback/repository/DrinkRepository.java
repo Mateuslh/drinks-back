@@ -9,6 +9,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface DrinkRepository extends JpaRepository<Drink, Long>, PagingAndSortingRepository<Drink, Long> {
     Page<Drink> findByAdminId(Long adminId, Pageable pageable);
@@ -18,4 +20,5 @@ public interface DrinkRepository extends JpaRepository<Drink, Long>, PagingAndSo
     @Query("SELECT d FROM Drink d WHERE d.admin.id = :adminId AND LOWER(d.drinkName) LIKE LOWER(CONCAT('%', :drinkName, '%'))")
     Page<Drink> findByAdminIdAndDrinkNameSimilar(@Param("adminId") Long adminId, @Param("drinkName") String drinkName, Pageable pageable);
 
+    Optional<Drink> findByAdminIdAndId(Long adminId, Long id);
 }

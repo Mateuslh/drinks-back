@@ -48,4 +48,14 @@ public class DrinkController {
         Page<Drink> drinks = drinkService.findByAdminIdAndDrinkNameSimilar(admin, drinkName != null ? drinkName : "", pageable);
         return ResponseEntity.ok(drinks);
     }
+
+    @GetMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Drink> getDrink(@PathVariable Long id) {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Admin admin = adminService.findByUsername(username);
+
+        return ResponseEntity.ok(drinkService.findByIdAndAdmin(id, admin));
+    }
 }

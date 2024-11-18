@@ -1,6 +1,7 @@
 package com.dev.drinksback.service;
 
 import com.dev.drinksback.exception.DrinkGenerationException;
+import com.dev.drinksback.exception.EntidadeNaoEncontradaException;
 import com.dev.drinksback.model.Admin;
 import com.dev.drinksback.model.Drink;
 import com.dev.drinksback.repository.DrinkRepository;
@@ -168,5 +169,9 @@ public class DrinkService {
         if (drink.getPreparationMode() != null) {
             drink.getPreparationMode().forEach(step -> step.setDrink(drink));
         }
+    }
+
+    public Drink findByIdAndAdmin(Long id, Admin admin) {
+        return drinkRepository.findByAdminIdAndId(admin.getId(), id).orElseThrow(() -> new EntidadeNaoEncontradaException(Drink.class));
     }
 }
