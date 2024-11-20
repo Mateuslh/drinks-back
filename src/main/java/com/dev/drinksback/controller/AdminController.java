@@ -46,7 +46,7 @@ public class AdminController {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Admin admin = adminService.findByUsername(username);
-        if (admin.getId().equals(id))
+        if (!admin.getId().equals(id))
             throw new AccessDeniedException("Você não pode consultar creditos de outro usuario");
         return new ResponseEntityDto<>().setContent(adminService.getCreditos(admin.getId()));
     }
